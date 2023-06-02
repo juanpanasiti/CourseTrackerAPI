@@ -16,7 +16,6 @@ class CourseBase(BaseModel):
     score: int = -1
     badge_url: str | None = None
     first_class_url: str | None = None
-
     author: AuthorBase = AuthorBase()
 
     def is_valid(self) -> bool:
@@ -49,3 +48,19 @@ class CourseResponse(BaseModel):
     is_active: bool
     badge_url: str
     backup_url: str
+
+class CourseRequestUpdate(CourseBase):
+    title: str | None = None
+    description: str | None = None
+    level: LevelEnum | None = None
+    platzi_id: int | None = None
+    platzi_url: str | None = None
+    status: StatusEnum | None = None
+    is_active: bool | None = None
+    score: int | None = None
+    badge_url: str | None = None
+    first_class_url: str | None = None
+    author: AuthorBase | None = None
+
+    def clean_data(self) -> dict:
+        return {k: v for k, v in self.__dict__.items() if v is not None }

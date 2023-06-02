@@ -57,8 +57,6 @@ class BaseRepository(Generic[ModelType]):
             raise ex
         finally:
             self.db.close()
-        
-
 
     def get_by_id(self, id: int, search_filter: dict = None) -> ModelType:
         if search_filter is None:
@@ -73,45 +71,43 @@ class BaseRepository(Generic[ModelType]):
         except Exception as ex:
             print('\033[91m', ex.args, '\033[0m')
             raise ex
-        finally:
-            self.db.close()
 
-    def get_list_by_filter(self, search_filter: dict) -> List[ModelType]:
-        query = self.db.query(self.model).filter_by(**search_filter)
-        try:
-            return query.all()
-        except Exception as ex:
-            raise ex
-        finally:
-            self.db.close()
+    # def get_list_by_filter(self, search_filter: dict) -> List[ModelType]:
+    #     query = self.db.query(self.model).filter_by(**search_filter)
+    #     try:
+    #         return query.all()
+    #     except Exception as ex:
+    #         raise ex
+    #     finally:
+    #         self.db.close()
 
-    def update(self, new_data: ModelType, search_filter: dict = None) -> dict:
-        if search_filter is None:
-            search_filter = DEFAULT_FILTER
+    def update(self, resource_id: int, new_data: dict, search_filter: dict = {}) -> ModelType:
+        search_filter = {**DEFAULT_FILTER, **search_filter}
         try:
-            current_resource: ModelType = self.db.query(
-                self.model).filter_by(id=new_data.id, **search_filter).one()
-            current_resource.update_data(new_data)
+            # Get the resource to update
+            resource_db = self.get_by_id(resource_id, search_filter)
+            # Update the fields that change (dict)
+            for field in new_data.keys():
+                setattr(resource_db, field, new_data.get(field))
+            # Commit changes
             self.db.commit()
-            return current_resource.response_dict()
+            # Return updated model
+            return resource_db
         except NoResultFound as nf:
             print('\033[91m', nf.args, '\033[0m')
             raise nf
         except Exception as ex:
             # TODO: logger critical
             raise ex
-        finally:
-            self.db.close()
 
-    def delete(self, id: int) -> None:
-
-        try:
-            resource = self.get_by_id(id)
-            if resource:
-                resource.is_deleted = True
-                self.update(resource)
-        except Exception as ex:
-            # TODO: logger critical
-            raise ex
-        finally:
-            self.db.close()
+    # def delete(self, id: int) -> None:
+    #     try:
+    #         resource = self.get_by_id(id)
+    #         if resource:
+    #             resource.is_deleted = True
+    #             self.update(resource)
+    #     except Exception as ex:
+    #         # TODO: logger critical
+    #         raise ex
+    #     finally:
+    #         self.db.close()

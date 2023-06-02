@@ -1,6 +1,6 @@
 from app.repositories.course_repository import CourseRepository
 from app.database.models.course_model import CourseModel
-from app.schemas.course_schemas import CourseResponse, CourseAuthor
+from app.schemas.course_schemas import CourseResponse, CourseAuthor, CourseRequestUpdate
 
 
 class CourseService():
@@ -11,7 +11,7 @@ class CourseService():
         author = CourseAuthor(
             id=course_db.author_id,
             fullname=course_db.author.fullname if course_db.author else 'NONAME'
-            )
+        )
         return CourseResponse(
             level=course_db.level,
             description=course_db.description,
@@ -27,7 +27,11 @@ class CourseService():
             backup_url=course_db.backup_url,
             author=author,
         )
-    
-    def get_all(self, limit:int, offset:int):
+
+    def get_all(self, limit: int, offset: int):
         courses_db = self.course_repo.get_all(limit, offset)
         return [self.__model_to_schema(course) for course in courses_db]
+
+    def update(self, course_id: int, update_data: CourseRequestUpdate) -> CourseResponse:
+        updated_course = self.course_repo.update(course_id, update_data.dict(exclude_none=True))
+        return self.__model_to_schema(updated_course)

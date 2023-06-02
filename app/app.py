@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # from .api.middlewares.jwt_middlewares import JWTMiddlewares
 from .api.routes import api_router
-# from .database import rda_db
+from .database import platzi_db
 from app.core.api_doc import api_description
 # from app.core.config import settings
 
@@ -23,11 +23,9 @@ app.include_router(api_router)
 
 @app.on_event('startup')
 async def startup_event():
-    pass
-    # rda_db.connect()
+    platzi_db.connect()
 
 
 @app.on_event('shutdown')
 async def shutdown_event():
-    pass
-    # rda_db.disconnect()
+    platzi_db.disconnect()
