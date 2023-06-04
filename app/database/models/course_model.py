@@ -23,7 +23,7 @@ class CourseModel(BaseModel):
     badge_url: Mapped[str] = mapped_column(String(255), default='', nullable=False)
     first_class_url: Mapped[str] = mapped_column(String(255), default='', nullable=False)
 
-    backup_url: Mapped[str] = mapped_column(String(20), default='', nullable=False)
+    backup_url: Mapped[str] = mapped_column(String(255), default='', server_default='', nullable=False)
 
     # FKs
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey('authors.id'))

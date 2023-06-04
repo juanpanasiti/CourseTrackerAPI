@@ -97,7 +97,6 @@ class BaseRepository(Generic[ModelType]):
             print('\033[91m', nf.args, '\033[0m')
             raise nf
         except Exception as ex:
-            # TODO: logger critical
             raise ex
 
     # def delete(self, id: int) -> None:

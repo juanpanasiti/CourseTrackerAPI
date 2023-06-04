@@ -49,18 +49,20 @@ class CourseResponse(BaseModel):
     badge_url: str
     backup_url: str
 
-class CourseRequestUpdate(CourseBase):
+class CourseRequestUpdate(BaseModel):
     title: str | None = None
     description: str | None = None
     level: LevelEnum | None = None
-    platzi_id: int | None = None
+    # platzi_id: int | None = None
     platzi_url: str | None = None
     status: StatusEnum | None = None
     is_active: bool | None = None
     score: int | None = None
     badge_url: str | None = None
+    backup_url: str | None = None
     first_class_url: str | None = None
-    author: AuthorBase | None = None
+    # author: AuthorBase | None = None
 
-    def clean_data(self) -> dict:
-        return {k: v for k, v in self.__dict__.items() if v is not None }
+    # def clean_data(self) -> dict:
+    #     dict_data = self.dict(exclude={'author', 'platzi_id'})
+    #     return {k: v for k, v in self.__dict__.items() if v is not None }
