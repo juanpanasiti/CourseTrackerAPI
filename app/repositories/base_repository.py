@@ -19,15 +19,16 @@ class BaseRepository(Generic[ModelType]):
         self.db = db
         self.model = ModelType
 
-    def create(self, new_resource: ModelType) -> None:
+    def create(self, new_resource: dict) -> ModelType:
         try:
-            self.db.add(new_resource)
+            resource_db = self.model()
+            for field in new_resource.keys():
+                setattr(resource_db, field, new_resource.get(field))
+            self.db.add(resource_db)
             self.db.commit()
-            self.db.refresh(new_resource)
+            return resource_db
         except IntegrityError as ie:
             raise ie
-        finally:
-            self.db.close()
 
     def get_all(self, limit: int, offset: int, search_filter: dict = None) -> List[ModelType]:
         if search_filter is None:
@@ -55,8 +56,6 @@ class BaseRepository(Generic[ModelType]):
             return None
         except Exception as ex:
             raise ex
-        finally:
-            self.db.close()
 
     def get_by_id(self, id: int, search_filter: dict = None) -> ModelType:
         if search_filter is None:
