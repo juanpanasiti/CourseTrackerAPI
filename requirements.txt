@@ -10,8 +10,13 @@ SQLAlchemy==2.0.15
 psycopg2-binary==2.9.6  # PostgreSQL
 
 # Config
+python-multipart==0.0.6
 python-dotenv==1.0.0
 
 # Scrapping
 httpx==0.24.1
 beautifulsoup4==4.12.2
+
+# Security
+bcrypt==4.0.1
+PyJWT==2.6.0
