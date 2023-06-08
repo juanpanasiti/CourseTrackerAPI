@@ -7,8 +7,7 @@ pydantic[email]==1.10.8
 # DB
 alembic==1.11.1
 SQLAlchemy==2.0.15
-# psycopg2-binary==2.9.6  # PostgreSQL
-psycopg2==2.9.6
+psycopg2-binary==2.9.5
 
 # Config
 python-multipart==0.0.6
